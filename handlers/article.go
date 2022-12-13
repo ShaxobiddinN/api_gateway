@@ -29,22 +29,12 @@ func (h handler) CreateArticle(c *gin.Context) {
 	}
 	//ToDo - validation should be here
 
-	obj, err := h.grpcClients.Article.CreateArticle(c.Request.Context(), &blogpost.CreateArticleRequest{
+	article, err := h.grpcClients.Article.CreateArticle(c.Request.Context(), &blogpost.CreateArticleRequest{
 		Content: &blogpost.Content{
 			Title: body.Title,
 			Body:  body.Body,
 		},
 		AuthorId: body.AuthorID,
-	})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, models.JSONErrorResponce{
-			Error: err.Error(),
-		})
-		return
-	}
-
-	article, err := h.grpcClients.Article.GetArticleById(c.Request.Context(), &blogpost.GetArticleByIdRequest{
-		Id: obj.Id,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.JSONErrorResponce{
@@ -159,21 +149,12 @@ func (h handler) UpdateArticle(c *gin.Context) {
 		return
 	}
 
-	obj, err := h.grpcClients.Article.UpdateArticle(c.Request.Context(), &blogpost.UpdateArticleRequest{
+	article, err := h.grpcClients.Article.UpdateArticle(c.Request.Context(), &blogpost.UpdateArticleRequest{
 		Content: &blogpost.Content{
 			Title: body.Title,
 			Body:  body.Body,
 		},
-	})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, models.JSONErrorResponce{
-			Error: err.Error(),
-		})
-		return
-	}
-
-	article, err := h.grpcClients.Article.GetArticleById(c.Request.Context(), &blogpost.GetArticleByIdRequest{
-		Id: obj.Id,
+		Id: body.ID,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.JSONErrorResponce{
@@ -203,18 +184,8 @@ func (h handler) DeleteArticle(c *gin.Context) {
 
 	idStr := c.Param("id")
 
-	obj, err := h.grpcClients.Article.GetArticleById(c.Request.Context(), &blogpost.GetArticleByIdRequest{
-		Id: idStr,
-	})
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, models.JSONErrorResponce{
-			Error: err.Error(),
-		})
-		return
-	}
-
 	article, err := h.grpcClients.Article.DeleteArticle(c.Request.Context(), &blogpost.DeleteArticleRequest{
-		Id: obj.Id,
+		Id: idStr,
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, models.JSONErrorResponce{
