@@ -154,6 +154,10 @@ paths:
         in: query
         name: search
         type: string
+      - description: authorization
+        in: header
+        name: Authorization
+        type: string
       produces:
       - application/json
       responses:
@@ -182,6 +186,10 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.CreateArticleModel'
+      - description: authorization
+        in: header
+        name: Authorization
+        type: string
       produces:
       - application/json
       responses:
@@ -212,6 +220,10 @@ paths:
         required: true
         schema:
           $ref: '#/definitions/models.UpdateArticleModel'
+      - description: authorization
+        in: header
+        name: Authorization
+        type: string
       produces:
       - application/json
       responses:
@@ -244,6 +256,10 @@ paths:
         name: id
         required: true
         type: string
+      - description: authorization
+        in: header
+        name: Authorization
+        type: string
       produces:
       - application/json
       responses:
@@ -272,6 +288,10 @@ paths:
         in: path
         name: id
         required: true
+        type: string
+      - description: authorization
+        in: header
+        name: Authorization
         type: string
       produces:
       - application/json

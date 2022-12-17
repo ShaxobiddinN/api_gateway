@@ -51,6 +51,12 @@ const docTemplate = `{
                         "description": "smth",
                         "name": "search",
                         "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "authorization",
+                        "name": "Authorization",
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -98,6 +104,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.UpdateArticleModel"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "authorization",
+                        "name": "Authorization",
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -151,6 +163,12 @@ const docTemplate = `{
                         "schema": {
                             "$ref": "#/definitions/models.CreateArticleModel"
                         }
+                    },
+                    {
+                        "type": "string",
+                        "description": "authorization",
+                        "name": "Authorization",
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -201,6 +219,12 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "authorization",
+                        "name": "Authorization",
+                        "in": "header"
                     }
                 ],
                 "responses": {
@@ -249,6 +273,12 @@ const docTemplate = `{
                         "name": "id",
                         "in": "path",
                         "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "authorization",
+                        "name": "Authorization",
+                        "in": "header"
                     }
                 ],
                 "responses": {

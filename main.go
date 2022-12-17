@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 
 	"blogpost/api_gateway/clients"
@@ -14,8 +15,8 @@ import (
 	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 )
 
-// @license.name  Apache 2.0
-// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
+// @license.name Apache 2.0
+// @license.url  http://www.apache.org/licenses/LICENSE-2.0.html
 
 func main() {
 
@@ -33,21 +34,20 @@ func main() {
 		r.Use(gin.Logger(), gin.Recovery()) // Later they will be replaced by custom Logger and Recovery
 	}
 
-	// r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-
 	grpcClients, err := clients.NewGrpcClients(cfg)
 	if err != nil {
 		panic(err)
 	}
 	h := handlers.NewHandler(cfg, grpcClients)
 
+	r.GET("/ping", MyCORSMiddleware(), h.AuthMiddleware(), func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"message": "pong",
+		})
+	})
 	v1 := r.Group("/v1")
 	{
+		v1.Use(MyCORSMiddleware(), h.AuthMiddleware())
 		v1.POST("/article", h.CreateArticle)
 		v1.GET("/article/:id", h.GetArticleById)
 		v1.GET("/article", h.GetArticleList)
@@ -63,4 +63,24 @@ func main() {
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(cfg.HTTPPort) // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
+}
+
+// MyCORSMiddleware ...
+func MyCORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		log.Println("MyCORSMiddleware...")
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, PATCH, DELETE")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Header("Access-Control-Max-Age", "3600")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
 }
